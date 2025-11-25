@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>买房投资决策计算器 - 专业版</title>
+    <meta name="description" content="专业的房地产投资分析工具，计算投资回报率、评估风险、提供决策建议">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🏠 买房投资决策计算器</h1>
+            <p class="subtitle">基于专业投资框架，帮您计算收益、评估风险、做出明智决策</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Input Section -->
+            <section class="card input-section">
+                <h2>📊 投资参数设置</h2>
+                
+                <div class="input-grid">
+                    <!-- 房屋信息 -->
+                    <div class="input-group">
+                        <h3>房屋信息</h3>
+                        <div class="form-field">
+                            <label for="housePrice">房屋总价 (万元)</label>
+                            <input type="number" id="housePrice" value="300" min="0" step="10">
+                        </div>
+                        <div class="form-field">
+                            <label for="downPaymentRatio">首付比例 (%)</label>
+                            <input type="number" id="downPaymentRatio" value="30" min="0" max="100" step="5">
+                            <span class="helper-text">首付金额: <span id="downPaymentAmount">90</span> 万元</span>
+                        </div>
+                        <div class="form-field">
+                            <label for="holdingYears">持有年限 (年)</label>
+                            <input type="number" id="holdingYears" value="5" min="1" max="30" step="1">
+                        </div>
+                    </div>
+
+                    <!-- 贷款信息 -->
+                    <div class="input-group">
+                        <h3>贷款信息</h3>
+                        <div class="form-field">
+                            <label for="loanYears">贷款年限 (年)</label>
+                            <input type="number" id="loanYears" value="30" min="1" max="30" step="1">
+                        </div>
+                        <div class="form-field">
+                            <label for="interestRate">贷款年利率 (%)</label>
+                            <input type="number" id="interestRate" value="4.1" min="0" max="20" step="0.1">
+                        </div>
+                        <div class="form-field">
+                            <label for="loanAmount">贷款金额 (万元)</label>
+                            <input type="number" id="loanAmount" value="210" readonly>
+                            <span class="helper-text">月供: <span id="monthlyPayment">0</span> 元</span>
+                        </div>
+                    </div>
+
+                    <!-- 租金与收益 -->
+                    <div class="input-group">
+                        <h3>租金与收益</h3>
+                        <div class="form-field">
+                            <label for="monthlyRent">月租金 (元)</label>
+                            <input type="number" id="monthlyRent" value="5000" min="0" step="100">
+                            <span class="helper-text">年租金: <span id="yearlyRent">60000</span> 元</span>
+                        </div>
+                        <div class="form-field">
+                            <label for="costRatio">持有成本比例 (%)</label>
+                            <input type="number" id="costRatio" value="15" min="0" max="50" step="1">
+                            <span class="helper-text">物业费、维修、空置等成本占租金比例</span>
+                        </div>
+                        <div class="form-field">
+                            <label for="appreciationRate">预期年涨幅 (%)</label>
+                            <input type="number" id="appreciationRate" value="4" min="-20" max="30" step="0.5">
+                        </div>
+                    </div>
+
+                    <!-- 风险评估参数 -->
+                    <div class="input-group">
+                        <h3>风险评估</h3>
+                        <div class="form-field">
+                            <label for="emergencyFund">紧急备用金 (万元)</label>
+                            <input type="number" id="emergencyFund" value="20" min="0" step="5">
+                            <span class="helper-text">建议至少12-24个月月供</span>
+                        </div>
+                        <div class="form-field">
+                            <label for="monthlyIncome">家庭月收入 (元)</label>
+                            <input type="number" id="monthlyIncome" value="30000" min="0" step="1000">
+                        </div>
+                    </div>
+                </div>
+
+                <button id="calculateBtn" class="btn-primary">
+                    <span>💡 开始计算</span>
+                </button>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-container" id="resultsContainer" style="display: none;">
+                <!-- 收益分析 -->
+                <div class="card result-card">
+                    <h2>💰 收益分析</h2>
+                    <div class="metrics-grid">
+                        <div class="metric-item highlight">
+                            <div class="metric-label">现金回报率</div>
+                            <div class="metric-value" id="cashReturn">0%</div>
+                            <div class="metric-desc">年租金净收入 / 首付</div>
+                        </div>
+                        <div class="metric-item highlight">
+                            <div class="metric-label">综合回报率</div>
+                            <div class="metric-value" id="totalReturn">0%</div>
+                            <div class="metric-desc">含房价增值的总收益</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">年化收益率</div>
+                            <div class="metric-value" id="annualReturn">0%</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">月供覆盖比</div>
+                            <div class="metric-value" id="coverageRatio">0</div>
+                        </div>
+                    </div>
+
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span>年租金净收入</span>
+                            <strong id="netRentIncome">0</strong>
+                        </div>
+                        <div class="detail-item">
+                            <span>预期房价增值</span>
+                            <strong id="appreciation">0</strong>
+                        </div>
+                        <div class="detail-item">
+                            <span>总收益</span>
+                            <strong id="totalProfit">0</strong>
+                        </div>
+                        <div class="detail-item">
+                            <span>总利息支出</span>
+                            <strong id="totalInterest">0</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 风险评估 -->
+                <div class="card result-card">
+                    <h2>⚠️ 风险评估</h2>
+                    <div class="risk-score-container">
+                        <div class="risk-score-circle">
+                            <svg viewBox="0 0 200 200">
+                                <circle cx="100" cy="100" r="90" class="risk-bg"></circle>
+                                <circle cx="100" cy="100" r="90" class="risk-progress" id="riskCircle"></circle>
+                            </svg>
+                            <div class="risk-score-text">
+                                <div class="risk-score-number" id="riskScore">0</div>
+                                <div class="risk-score-label" id="riskLevel">评估中</div>
+                            </div>
+                        </div>
+                        <div class="risk-legend">
+                            <div class="legend-item">
+                                <span class="legend-color low"></span>
+                                <span>0-40 低风险</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color medium"></span>
+                                <span>41-70 中风险</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color high"></span>
+                                <span>71-100 高风险</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="risk-factors">
+                        <div class="risk-factor">
+                            <div class="factor-header">
+                                <span>现金流风险</span>
+                                <span class="factor-score" id="cashFlowRisk">0</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="cashFlowBar"></div>
+                            </div>
+                        </div>
+                        <div class="risk-factor">
+                            <div class="factor-header">
+                                <span>杠杆风险</span>
+                                <span class="factor-score" id="leverageRisk">0</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="leverageBar"></div>
+                            </div>
+                        </div>
+                        <div class="risk-factor">
+                            <div class="factor-header">
+                                <span>市场风险</span>
+                                <span class="factor-score" id="marketRisk">0</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="marketBar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 压力测试 -->
+                <div class="card result-card">
+                    <h2>🔬 压力测试</h2>
+                    <p class="section-desc">模拟不利情景下的投资表现</p>
+                    
+                    <div class="stress-tests">
+                        <div class="stress-test-item">
+                            <h4>📉 房价下跌10%</h4>
+                            <div class="stress-result" id="stress1"></div>
+                        </div>
+                        <div class="stress-test-item">
+                            <h4>📉 房价下跌20%</h4>
+                            <div class="stress-result" id="stress2"></div>
+                        </div>
+                        <div class="stress-test-item">
+                            <h4>💸 租金下降20%</h4>
+                            <div class="stress-result" id="stress3"></div>
+                        </div>
+                        <div class="stress-test-item">
+                            <h4>📈 利率上升2%</h4>
+                            <div class="stress-result" id="stress4"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 决策建议 -->
+                <div class="card result-card advice-card">
+                    <h2>💡 决策建议</h2>
+                    <div id="adviceContent" class="advice-content"></div>
+                </div>
+
+                <!-- 图表展示 -->
+                <div class="card result-card">
+                    <h2>📈 可视化分析</h2>
+                    <canvas id="profitChart"></canvas>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>⚠️ 本工具仅供参考，投资决策请结合实际情况并咨询专业人士</p>
+            <p class="quote">"投资的核心不是追求收益最大化，而是追求风险调整后的收益最大化。先求不败，而后求胜。"</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="calculator.js"></script>
+    <script src="risk-analyzer.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
